@@ -1,0 +1,40 @@
+<template>
+    <div class="q-pa-md">
+        <div class="myfont">My Form</div>
+         <q-form ref="myForm">
+             <q-input v-model="name"  label="Your name" outlined 
+             :rules="[val => !!val || 'Name required']"
+             />
+             <q-input v-model="age"  label="Your age" outlined 
+             :rules="[val => (val !== null && val !== '')  || 'Age required',
+                      val => (val >= 1 && val <= 120 || 'Age must be 1-120 ปี')]" 
+                hide-bottom-space/>
+             <q-btn color="primary"  label="ADD"  @click="submitForm"
+             class="q-mt-md"/>
+         </q-form>
+    </div>
+</template>
+<script setup>
+import { ref ,nextTick} from 'vue';
+const name = ref()
+const age = ref(0)
+const myForm = ref()
+const submitForm = () => {
+    if(myForm.value) {
+        myForm.value.validate().then(async (success) => {
+            if(success){
+                console.log("Name: " + name.value)
+                console.log("Age: " + age.value)
+                name.value = ''
+                age.value = 1
+                await nextTick();
+                myForm.value.resetValidation();
+            } else{
+                console.log("NOT validate")
+            }
+        })
+
+    }
+    
+}
+</script>
